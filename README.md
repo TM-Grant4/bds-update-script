@@ -4,7 +4,7 @@
 
 #
 ## Disclaimers
-1. **only works on linux machines**
+1. **Only works on linux machines**
 2. **MUST have wget & unzip installed**
 - You can install them with the following command: 
 ```sh
