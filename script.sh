@@ -3,33 +3,14 @@
 set -e
 
 SERVER_URL="https://www.minecraft.net/en-us/download/server/bedrock"
-declare -A indexes
-indexes[win]=1
-indexes[ubuntu]=2
-indexes[win_preview]=3
-indexes[ubuntu_preview]=4
-
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 [win|ubuntu|win_preview|ubuntu_preview]"
-    exit 1
-fi
-
-type="$1"
-index="${indexes[$type]}"
-
-if [ -z "$index" ]; then
-    echo "Invalid type: $type"
-    exit 1
-fi
 
 html=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "$SERVER_URL")
-url=$(echo "$html" | grep -oP 'href="\Khttps://www.minecraft.net/bedrockdedicatedserver/[^"]+' | sed -n "${index}p")
+url=$(echo "$html" | grep -oP 'href="\Khttps://www\.minecraft\.net/bedrockdedicatedserver/bin-linux/[^"]+')
 
 if [ -z "$url" ]; then
     echo "Failed to retrieve the URL."
     exit 1
 fi
-
 
 maindir="$(pwd)"
 cachedir="$maindir/cache"
