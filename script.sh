@@ -1,20 +1,26 @@
 #!/bin/bash
 
-url=$1
+url=$(./extractURLfromPage "$1")
+
+if [ -z "$url" ]; then
+    echo "Failed to retrieve the URL from the Go script."
+    exit 1
+fi
+
 maindir="$(pwd)"
 cachedir="$maindir/cache"
 serverdir="$maindir/server"
 safefiles="allowlist.json config development_behavior_packs development_resource_packs permissions.json server.properties worlds"
 missing_count=0
 
-if [ ! $1 ]; then
+if [ ! "$url" ]; then
     echo "Missing the URL for the first argument!"
     exit 1
 fi
 
-if [ ! -d $serverdir ]; then
-	echo "Server folder does not exist!"
-	exit 1
+if [ ! -d "$serverdir" ]; then
+    echo "Server folder does not exist!"
+    exit 1
 fi
 
 for item in $safefiles; do
@@ -35,30 +41,30 @@ if [ "$missing_count" -gt 0 ]; then
     fi
 fi
 
-mkdir -p $cachedir
+mkdir -p "$cachedir"
 
 for item in $safefiles; do
     if [ -e "$serverdir/$item" ]; then
         echo "Backing up $item..."
-        cp -ri $serverdir/$item $cachedir/ || exit 1
+        cp -ri "$serverdir/$item" "$cachedir/" || exit 1
     fi
 done
 
 echo "Removing old files in $serverdir"
-rm -rf $serverdir/*
+rm -rf "$serverdir/*"
 
 echo "Downloading $url"
-wget -O $serverdir/server.zip --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0" $url
+wget -O "$serverdir/server.zip" --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0" "$url"
 
 echo "Extracting server zip file..."
-unzip -q $serverdir/server.zip -d $serverdir/
-rm $serverdir/server.zip
+unzip -q "$serverdir/server.zip" -d "$serverdir/"
+rm "$serverdir/server.zip"
 
 echo "Copying saved files back into $serverdir"
-cp -ri $cachedir/* $serverdir/
+cp -ri "$cachedir"/* "$serverdir/"
 
 echo "Removing cache directory..."
-rm -rf $cachedir
+rm -rf "$cachedir"
 
 echo "Update complete!"
 exit 0

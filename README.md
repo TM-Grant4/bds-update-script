@@ -26,8 +26,15 @@ server
 chmod +x script.sh
 ```
 4. Run the script.
- - The `<URL>` is the newest URL for the MC BDS server download. You can get this by searching "mc bds" in any browser and going the official Minecraft website and copy the link for the linux server.
+ - The `<type>` is the desired server typr for your MC BDS server download.
  - Then you can run the script by doing the following command:
 ```sh
-./script.sh <URL>
+./script.sh <type>
 ```
+
+## Types. 
+---
+1. Windows: `win`
+2. Ubuntu: `ubuntu`
+3. Windows Preview: `win_preview`
+4. Ubuntu Preview: `ubuntu_preview`
