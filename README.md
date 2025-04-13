@@ -26,15 +26,7 @@ server
 chmod +x script.sh
 ```
 4. Run the script.
- - The `<type>` is the desired server typr for your MC BDS server download.
- - Then you can run the script by doing the following command:
+ - you can run the script by doing the following command:
 ```sh
-./script.sh <type>
+./script.sh
 ```
-
-## Types. 
----
-1. Windows: `win`
-2. Ubuntu: `ubuntu`
-3. Windows Preview: `win_preview`
-4. Ubuntu Preview: `ubuntu_preview`
