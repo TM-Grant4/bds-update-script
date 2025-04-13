@@ -1,22 +1,41 @@
 #!/bin/bash
 
-url=$(./extractURLfromPage "$1")
+set -e
 
-if [ -z "$url" ]; then
-    echo "Failed to retrieve the URL from the Go script."
+SERVER_URL="https://www.minecraft.net/en-us/download/server/bedrock"
+declare -A indexes
+indexes[win]=1
+indexes[ubuntu]=2
+indexes[win_preview]=3
+indexes[ubuntu_preview]=4
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 [win|ubuntu|win_preview|ubuntu_preview]"
     exit 1
 fi
+
+type="$1"
+index="${indexes[$type]}"
+
+if [ -z "$index" ]; then
+    echo "Invalid type: $type"
+    exit 1
+fi
+
+html=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "$SERVER_URL")
+url=$(echo "$html" | grep -oP 'href="\Khttps://www.minecraft.net/bedrockdedicatedserver/[^"]+' | sed -n "${index}p")
+
+if [ -z "$url" ]; then
+    echo "Failed to retrieve the URL."
+    exit 1
+fi
+
 
 maindir="$(pwd)"
 cachedir="$maindir/cache"
 serverdir="$maindir/server"
 safefiles="allowlist.json config development_behavior_packs development_resource_packs permissions.json server.properties worlds"
 missing_count=0
-
-if [ ! "$url" ]; then
-    echo "Missing the URL for the first argument!"
-    exit 1
-fi
 
 if [ ! -d "$serverdir" ]; then
     echo "Server folder does not exist!"
@@ -51,7 +70,7 @@ for item in $safefiles; do
 done
 
 echo "Removing old files in $serverdir"
-rm -rf "$serverdir/*"
+rm -rf "$serverdir"/*
 
 echo "Downloading $url"
 wget -O "$serverdir/server.zip" --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0" "$url"

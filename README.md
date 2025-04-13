@@ -8,7 +8,7 @@
 2. **MUST have wget & unzip installed**
 - You can install them with the following command: 
 ```sh
-apt update && apt install wget unzip
+apt update && apt install wget unzip pup
 ```
 3. **Please be in the outside directory of your server.**
 - This would mean be outside the folder your server is in, so if your server folder is called "server" then make sure you can see that directory in your terminal when you type "dir"
